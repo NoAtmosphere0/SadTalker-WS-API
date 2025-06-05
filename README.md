@@ -43,13 +43,16 @@ Start the FastAPI WebSocket server:
 # Install WebSocket dependencies
 pip install fastapi uvicorn[standard] websockets
 
-# Start the server
-python fastapi_websocket_server.py
+# Start the server (using the API module)
+python -m api.fastapi_server
 # or
-uvicorn fastapi_websocket_server:app --host 0.0.0.0 --port 8000
+uvicorn api.fastapi_server:app --host 0.0.0.0 --port 8000
 
 # Or use the startup script
-bash start_server.sh
+bash scripts/start_server.sh
+
+# For standalone Gradio interface
+bash scripts/start_gradio_client.sh
 ```
 
 **API Endpoints:**
@@ -471,10 +474,18 @@ SadTalker-WS-API/
 ├── Dockerfile                    # Container configuration
 ├── nginx.conf                    # Reverse proxy config
 ├── requirements.txt              # Python dependencies
+├── api/                          # WebSocket and API servers
+├── cli/                          # Command-line interface
+├── config/                       # Configuration files
+├── data/                         # Data directory
+│   ├── checkpoints/              # Pre-trained models
+│   ├── examples/                 # Sample images and audio
+│   ├── results/                  # Generated videos
+│   └── static/                   # Static files
+├── scripts/                      # Utility scripts
 ├── src/                          # SadTalker core modules
-├── checkpoints/                  # Pre-trained models
-├── examples/                     # Sample images and audio
-└── results/                      # Generated videos
+├── tests/                        # Test files
+└── web/                          # Web interface files
 ```
 
 ## Troubleshooting
@@ -484,10 +495,13 @@ SadTalker-WS-API/
 **Test the complete setup:**
 ```bash
 # Run complete test suite
-python test_complete_suite.py
+python examples/test_complete_suite.py
 
 # Test only WebSocket API
-python test_complete_suite.py --websocket-only
+python examples/test_complete_suite.py --websocket-only
+
+# Test simple example
+python examples/simple_example.py
 
 # Test only Gradio client
 python test_complete_suite.py --gradio-only
