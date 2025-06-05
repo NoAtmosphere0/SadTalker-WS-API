@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  sadtalker-api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./results:/app/results
+      - ./static:/app/static
+      - ./checkpoints:/app/checkpoints:ro
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - HOST=0.0.0.0
+      - PORT=8000
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Optional: Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - sadtalker-api
+    restart: unless-stopped
+    profiles:
+      - production

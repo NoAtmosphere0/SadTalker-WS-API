@@ -1,298 +1,600 @@
-<div align="center">
+# SadTalker WebSocket API: Real-time Talking Head Generation
 
-<img src='https://user-images.githubusercontent.com/4397546/229094115-862c747e-7397-4b54-ba4a-bd368bfe2e0f.png' width='500px'/>
+[![ArXiv](https://img.shields.io/badge/ArXiv-PDF-red)](https://arxiv.org/abs/2211.12194) [![Project Page](https://img.shields.io/badge/Project-Page-Green)](https://sadtalker.github.io) [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/vinthony/SadTalker)
 
+**TL;DR:** Generate talking head videos from a single portrait image and audio file via WebSocket API.
 
-<!--<h2> 😭 SadTalker： <span style="font-size:12px">Learning Realistic 3D Motion Coefficients for Stylized Audio-Driven Single Image Talking Face Animation </span> </h2> -->
+**Input:** Single portrait image 🙎‍♂️ + Audio 🎤 = Talking head video 🎞
 
-  <a href='https://arxiv.org/abs/2211.12194'><img src='https://img.shields.io/badge/ArXiv-PDF-red'></a> &nbsp; <a href='https://sadtalker.github.io'><img src='https://img.shields.io/badge/Project-Page-Green'></a> &nbsp; [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Winfredy/SadTalker/blob/main/quick_demo.ipynb) &nbsp; [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/vinthony/SadTalker) &nbsp; [![sd webui-colab](https://img.shields.io/badge/Automatic1111-Colab-green)](https://colab.research.google.com/github/camenduru/stable-diffusion-webui-colab/blob/main/video/stable/stable_diffusion_1_5_video_webui_colab.ipynb) &nbsp; <br> [![Replicate](https://replicate.com/cjwbw/sadtalker/badge)](https://replicate.com/cjwbw/sadtalker) [![Discord](https://dcbadge.vercel.app/api/server/rrayYqZ4tf?style=flat)](https://discord.gg/rrayYqZ4tf)
+> ⚠️ **Note:** Our model only works on REAL people or portrait images similar to real persons. Anime talking head generation will be released in the future.
 
-<div>
-    <a target='_blank'>Wenxuan Zhang <sup>*,1,2</sup> </a>&emsp;
-    <a href='https://vinthony.github.io/' target='_blank'>Xiaodong Cun <sup>*,2</a>&emsp;
-    <a href='https://xuanwangvc.github.io/' target='_blank'>Xuan Wang <sup>3</sup></a>&emsp;
-    <a href='https://yzhang2016.github.io/' target='_blank'>Yong Zhang <sup>2</sup></a>&emsp;
-    <a href='https://xishen0220.github.io/' target='_blank'>Xi Shen <sup>2</sup></a>&emsp; </br>
-    <a href='https://yuguo-xjtu.github.io/' target='_blank'>Yu Guo<sup>1</sup> </a>&emsp;
-    <a href='https://scholar.google.com/citations?hl=zh-CN&user=4oXBp9UAAAAJ' target='_blank'>Ying Shan <sup>2</sup> </a>&emsp;
-    <a target='_blank'>Fei Wang <sup>1</sup> </a>&emsp;
-</div>
-<br>
-<div>
-    <sup>1</sup> Xi'an Jiaotong University &emsp; <sup>2</sup> Tencent AI Lab &emsp; <sup>3</sup> Ant Group &emsp; 
-</div>
-<br>
-<i><strong><a href='https://arxiv.org/abs/2211.12194' target='_blank'>CVPR 2023</a></strong></i>
-<br>
-<br>
+## 🚀 New: WebSocket API Server
 
+This repository now includes a **FastAPI WebSocket server** for real-time talking head video generation with base64 input/output support.
 
-![sadtalker](https://user-images.githubusercontent.com/4397546/222490039-b1f6156b-bf00-405b-9fda-0c9a9156f991.gif)
+### WebSocket API Features
 
-<b>TL;DR: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; single portrait image 🙎‍♂️  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; audio 🎤  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; talking head video 🎞.</b>
+- **Real-time processing** via WebSocket connections
+- **Base64 input/output** for seamless integration
+- **Concurrent request handling** with configurable limits
+- **Progress tracking** and status updates
+- **Docker deployment** ready with CUDA support
+- **Interactive test client** for easy testing
+- **Batch processing** capabilities
+- **Error handling** and recovery
 
-<br>
+## Core Features
 
-</div>
+- Generate realistic talking head animations from a single image
+- Support for various preprocessing modes (crop, resize, full)
+- Face enhancement options (GFPGAN, RestoreFormer)
+- Background enhancement (Real-ESRGAN)
+- Expression control and pose manipulation
+- 3D face visualization support
+- Free-view 4D talking head generation
 
+## Quick Start
 
+### WebSocket API Server
 
-## Highlights
+Start the FastAPI WebSocket server:
 
-- The license has been updated to Apache 2.0, and we've removed the non-commercial restriction
-- **SadTalker has now officially been integrated into Discord, where you can use it for free by sending files. You can also generate high-quailty videos from text prompts. Join: [![Discord](https://dcbadge.vercel.app/api/server/rrayYqZ4tf?style=flat)](https://discord.gg/rrayYqZ4tf)**
+```bash
+# Install WebSocket dependencies
+pip install fastapi uvicorn[standard] websockets
 
-- We've published a [stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui) extension. Check out more details [here](docs/webui_extension.md). [Demo Video](https://user-images.githubusercontent.com/4397546/231495639-5d4bb925-ea64-4a36-a519-6389917dac29.mp4)
+# Start the server
+python fastapi_websocket_server.py
+# or
+uvicorn fastapi_websocket_server:app --host 0.0.0.0 --port 8000
 
-- Full image mode is now available! [More details...](https://github.com/OpenTalker/SadTalker#full-bodyimage-generation)
+# Or use the startup script
+bash start_server.sh
+```
 
-| still+enhancer in v0.0.1                 | still + enhancer   in v0.0.2       |   [input image @bagbag1815](https://twitter.com/bagbag1815/status/1642754319094108161) |
-|:--------------------: |:--------------------: | :----: |
-| <video  src="https://user-images.githubusercontent.com/48216707/229484996-5d7be64f-2553-4c9e-a452-c5cf0b8ebafe.mp4" type="video/mp4"> </video> | <video  src="https://user-images.githubusercontent.com/4397546/230717873-355b7bf3-d3de-49f9-a439-9220e623fce7.mp4" type="video/mp4"> </video>  | <img src='./examples/source_image/full_body_2.png' width='380'> 
+**API Endpoints:**
+- `ws://localhost:8000/ws` - WebSocket endpoint for inference
+- `http://localhost:8000/` - API information
+- `http://localhost:8000/test` - Interactive test client
+- `http://localhost:8000/health` - Health check
 
-- Several new modes (Still, reference, and resize modes) are now available!
+### WebSocket API Usage
 
-- We're happy to see more community demos on [bilibili](https://search.bilibili.com/all?keyword=sadtalker), [YouTube](https://www.youtube.com/results?search_query=sadtalker) and [X (#sadtalker)](https://twitter.com/search?q=%23sadtalker&src).
+**Python Client Example:**
+```python
+import asyncio
+import websockets
+import json
+import base64
 
-## Changelog 
+async def generate_video():
+    uri = "ws://localhost:8000/ws"
+    
+    # Read and encode files
+    with open("image.jpg", "rb") as f:
+        image_base64 = base64.b64encode(f.read()).decode()
+    with open("audio.wav", "rb") as f:
+        audio_base64 = base64.b64encode(f.read()).decode()
+    
+    async with websockets.connect(uri) as websocket:
+        # Send request
+        request = {
+            "image_base64": image_base64,
+            "audio_base64": audio_base64,
+            "preprocess": "crop",
+            "expression_scale": 1.0
+        }
+        await websocket.send(json.dumps(request))
+        
+        # Receive response
+        response = await websocket.recv()
+        result = json.loads(response)
+        
+        if result["status"] == "success":
+            # Decode video
+            video_data = base64.b64decode(result["video_base64"])
+            with open("output.mp4", "wb") as f:
+                f.write(video_data)
 
-The previous changelog can be found [here](docs/changlelog.md).
+asyncio.run(generate_video())
+```
 
-- __[2023.06.12]__: Added more new features in WebUI extension, see the discussion [here](https://github.com/OpenTalker/SadTalker/discussions/386).
+**Test Clients:**
+```bash
+# Interactive web client
+open http://localhost:8000/test
 
-- __[2023.06.05]__: Released a new 512x512px (beta) face model. Fixed some bugs and improve the performance.
+# Gradio WebSocket client (recommended)
+python app_websocket.py
+# or
+bash start_gradio_client.sh
 
-- __[2023.04.15]__: Added a WebUI Colab notebook by [@camenduru](https://github.com/camenduru/): [![sd webui-colab](https://img.shields.io/badge/Automatic1111-Colab-green)](https://colab.research.google.com/github/camenduru/stable-diffusion-webui-colab/blob/main/video/stable/stable_diffusion_1_5_video_webui_colab.ipynb)
+# Python CLI client
+python test_client.py --image examples/source_image/art_0.png --audio examples/driven_audio/bus_chinese.wav
 
-- __[2023.04.12]__: Added a more detailed WebUI installation document and fixed a problem when reinstalling.
+# Simple example
+python simple_example.py
 
-- __[2023.04.12]__: Fixed the WebUI safe issues becasue of 3rd-party packages, and optimized the output path in `sd-webui-extension`.
+# Batch processing
+python batch_example.py
 
-- __[2023.04.08]__: In v0.0.2, we added a logo watermark to the generated video to prevent abuse. _This watermark has since been removed in a later release._
+# Complete test suite
+python test_complete_suite.py
+```
 
-- __[2023.04.08]__: In v0.0.2, we added features for full image animation and a link to download checkpoints from Baidu. We also optimized the enhancer logic.
+### Gradio WebSocket Client
 
-## To-Do
+Launch the **Gradio interface** that connects to the WebSocket API:
 
-We're tracking new updates in [issue #280](https://github.com/OpenTalker/SadTalker/issues/280).
+```bash
+# Start WebSocket server first
+python fastapi_websocket_server.py
 
-## Troubleshooting
+# Then start Gradio client (in another terminal)
+python app_websocket.py
 
-If you have any problems, please read our [FAQs](docs/FAQ.md) before opening an issue.
+# Or start both together
+bash start_gradio_client.sh -s
+```
 
+**Features:**
+- 🎨 **Beautiful web interface** with drag-and-drop file upload
+- 🔄 **Real-time status updates** and progress tracking  
+- ⚙️ **Full parameter control** (preprocessing, enhancement, etc.)
+- 🎤 **Text-to-Speech integration** (when available)
+- 📱 **Responsive design** for desktop and mobile
+- 🔧 **Connection monitoring** with automatic retry
 
+**Access URLs:**
+- Gradio UI: `http://localhost:7860`
+- WebSocket API: `http://localhost:8000`
 
-## 1. Installation.
+## Installation
 
-Community tutorials: [中文Windows教程 (Chinese Windows tutorial)](https://www.bilibili.com/video/BV1Dc411W7V6/) | [日本語コース (Japanese tutorial)](https://br-d.fanbox.cc/posts/5685086).
+### Linux/macOS
 
-### Linux/Unix
+1. Install [Anaconda](https://www.anaconda.com/), Python 3.8+, and `git`
 
-1. Install [Anaconda](https://www.anaconda.com/), Python and `git`.
+2. Clone the repository:
+```bash
+git clone https://github.com/OpenTalker/SadTalker.git
+cd SadTalker
+```
 
-2. Creating the env and install the requirements.
-  ```bash
-  git clone https://github.com/OpenTalker/SadTalker.git
+3. Create environment and install dependencies:
+```bash
+conda create -n sadtalker python=3.8
+conda activate sadtalker
+pip install -r requirements.txt
+```
 
-  cd SadTalker 
-
-  conda create -n sadtalker python=3.8
-
-  conda activate sadtalker
-
-  pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu113
-
-  conda install ffmpeg
-
-  pip install -r requirements.txt
-
-  ### Coqui TTS is optional for gradio demo. 
-  ### pip install TTS
-
-  ```  
-### Windows
-
-A video tutorial in chinese is available [here](https://www.bilibili.com/video/BV1Dc411W7V6/). You can also follow the following instructions:
-
-1. Install [Python 3.8](https://www.python.org/downloads/windows/) and check "Add Python to PATH".
-2. Install [git](https://git-scm.com/download/win) manually or using [Scoop](https://scoop.sh/): `scoop install git`.
-3. Install `ffmpeg`, following [this tutorial](https://www.wikihow.com/Install-FFmpeg-on-Windows) or using [scoop](https://scoop.sh/): `scoop install ffmpeg`.
-4. Download the SadTalker repository by running `git clone https://github.com/Winfredy/SadTalker.git`.
-5. Download the checkpoints and gfpgan models in the [downloads section](#2-download-models).
-6. Run `start.bat` from Windows Explorer as normal, non-administrator, user, and a Gradio-powered WebUI demo will be started.
-
-### macOS
-
-A tutorial on installing SadTalker on macOS can be found [here](docs/install.md).
-
-### Docker, WSL, etc
-
-Please check out additional tutorials [here](docs/install.md).
-
-## 2. Download Models
-
-You can run the following script on Linux/macOS to automatically download all the models:
-
+4. Download models:
 ```bash
 bash scripts/download_models.sh
 ```
 
-We also provide an offline patch (`gfpgan/`), so no model will be downloaded when generating.
-
-### Pre-Trained Models
-
-* [Google Drive](https://drive.google.com/file/d/1gwWh45pF7aelNP_P78uDJL8Sycep-K7j/view?usp=sharing)
-* [GitHub Releases](https://github.com/OpenTalker/SadTalker/releases)
-* [Baidu (百度云盘)](https://pan.baidu.com/s/1kb1BCPaLOWX1JJb9Czbn6w?pwd=sadt) (Password: `sadt`)
-
-<!-- TODO add Hugging Face links -->
-
-### GFPGAN Offline Patch
-
-* [Google Drive](https://drive.google.com/file/d/19AIBsmfcHW6BRJmeqSFlG5fL445Xmsyi?usp=sharing)
-* [GitHub Releases](https://github.com/OpenTalker/SadTalker/releases)
-* [Baidu (百度云盘)](https://pan.baidu.com/s/1P4fRgk9gaSutZnn8YW034Q?pwd=sadt) (Password: `sadt`)
-
-<!-- TODO add Hugging Face links -->
-
-
-<details><summary>Model Details</summary>
-
-
-Model explains:
-
-##### New version 
-| Model | Description
-| :--- | :----------
-|checkpoints/mapping_00229-model.pth.tar | Pre-trained MappingNet in Sadtalker.
-|checkpoints/mapping_00109-model.pth.tar | Pre-trained MappingNet in Sadtalker.
-|checkpoints/SadTalker_V0.0.2_256.safetensors | packaged sadtalker checkpoints of old version, 256 face render).
-|checkpoints/SadTalker_V0.0.2_512.safetensors | packaged sadtalker checkpoints of old version, 512 face render).
-|gfpgan/weights | Face detection and enhanced models used in `facexlib` and `gfpgan`.
-  
-  
-##### Old version
-| Model | Description
-| :--- | :----------
-|checkpoints/auido2exp_00300-model.pth | Pre-trained ExpNet in Sadtalker.
-|checkpoints/auido2pose_00140-model.pth | Pre-trained PoseVAE in Sadtalker.
-|checkpoints/mapping_00229-model.pth.tar | Pre-trained MappingNet in Sadtalker.
-|checkpoints/mapping_00109-model.pth.tar | Pre-trained MappingNet in Sadtalker.
-|checkpoints/facevid2vid_00189-model.pth.tar | Pre-trained face-vid2vid model from [the reappearance of face-vid2vid](https://github.com/zhanglonghao1992/One-Shot_Free-View_Neural_Talking_Head_Synthesis).
-|checkpoints/epoch_20.pth | Pre-trained 3DMM extractor in [Deep3DFaceReconstruction](https://github.com/microsoft/Deep3DFaceReconstruction).
-|checkpoints/wav2lip.pth | Highly accurate lip-sync model in [Wav2lip](https://github.com/Rudrabha/Wav2Lip).
-|checkpoints/shape_predictor_68_face_landmarks.dat | Face landmark model used in [dilb](http://dlib.net/). 
-|checkpoints/BFM | 3DMM library file.  
-|checkpoints/hub | Face detection models used in [face alignment](https://github.com/1adrianb/face-alignment).
-|gfpgan/weights | Face detection and enhanced models used in `facexlib` and `gfpgan`.
-
-The final folder will be shown as:
-
-<img width="331" alt="image" src="https://user-images.githubusercontent.com/4397546/232511411-4ca75cbf-a434-48c5-9ae0-9009e8316484.png">
-
-
-</details>
-
-## 3. Quick Start
-
-Please read our document on [best practices and configuration tips](docs/best_practice.md)
-
-### WebUI Demos
-
-**Online Demo**: [HuggingFace](https://huggingface.co/spaces/vinthony/SadTalker) | [SDWebUI-Colab](https://colab.research.google.com/github/camenduru/stable-diffusion-webui-colab/blob/main/video/stable/stable_diffusion_1_5_video_webui_colab.ipynb) | [Colab](https://colab.research.google.com/github/Winfredy/SadTalker/blob/main/quick_demo.ipynb)
-
-**Local WebUI extension**: Please refer to [WebUI docs](docs/webui_extension.md).
-
-**Local gradio demo (recommanded)**: A Gradio instance similar to our [Hugging Face demo](https://huggingface.co/spaces/vinthony/SadTalker) can be run locally:
-
+5. Install WebSocket API dependencies:
 ```bash
-## you need manually install TTS(https://github.com/coqui-ai/TTS) via `pip install tts` in advanced.
-python app_sadtalker.py
+pip install fastapi uvicorn[standard] websockets
 ```
 
-You can also start it more easily:
+### Docker Deployment
 
-- windows: just double click `webui.bat`, the requirements will be installed automatically.
-- Linux/Mac OS: run `bash webui.sh` to start the webui.
-
-
-### CLI usage
-
-##### Animating a portrait image from default config:
-```bash
-python inference.py --driven_audio <audio.wav> \
-                    --source_image <video.mp4 or picture.png> \
-                    --enhancer gfpgan 
-```
-The results will be saved in `results/$SOME_TIMESTAMP/*.mp4`.
-
-##### Full body/image Generation:
-
-Using `--still` to generate a natural full body video. You can add `enhancer` to improve the quality of the generated video. 
+Build and run with Docker:
 
 ```bash
-python inference.py --driven_audio <audio.wav> \
-                    --source_image <video.mp4 or picture.png> \
-                    --result_dir <a file to store results> \
-                    --still \
-                    --preprocess full \
-                    --enhancer gfpgan 
+# Build image
+docker build -t sadtalker-websocket .
+
+# Run container
+docker run -p 8000:8000 --gpus all sadtalker-websocket
+
+# Or use docker-compose
+docker-compose up -d
 ```
 
-More examples and configuration and tips can be founded in the [ >>> best practice documents <<<](docs/best_practice.md).
+**Production with Nginx:**
+```bash
+# Use the included nginx.conf for reverse proxy
+docker-compose -f docker-compose.yml up -d
+```
 
-## Citation
+### Windows
 
-If you find our work useful in your research, please consider citing:
+1. Install [Python 3.8](https://www.python.org/downloads/windows/) and [git](https://git-scm.com/download/win)
+2. Clone repository: `git clone https://github.com/OpenTalker/SadTalker.git`
+3. Download models (see [Download Models](#download-models))
+4. Run `start.bat` for WebUI demo
 
-```bibtex
-@article{zhang2022sadtalker,
-  title={SadTalker: Learning Realistic 3D Motion Coefficients for Stylized Audio-Driven Single Image Talking Face Animation},
-  author={Zhang, Wenxuan and Cun, Xiaodong and Wang, Xuan and Zhang, Yong and Shen, Xi and Guo, Yu and Shan, Ying and Wang, Fei},
-  journal={arXiv preprint arXiv:2211.12194},
-  year={2022}
+### Download Models
+
+**Pre-trained Models:**
+- [Google Drive](https://drive.google.com/file/d/1gwWh45pF7aelNP_P78uDJL8Sycep-K7j/view?usp=sharing)
+- [GitHub Releases](https://github.com/OpenTalker/SadTalker/releases)
+- [Baidu Cloud](https://pan.baidu.com/s/1kb1BCPaLOWX1JJb9Czbn6w?pwd=sadt) (Password: `sadt`)
+
+## Usage
+
+### WebSocket API Parameters
+
+| Parameter | Description | Type | Default |
+|-----------|-------------|------|---------|
+| `image_base64` | Base64 encoded source image | string | **required** |
+| `audio_base64` | Base64 encoded audio file | string | **required** |
+| `preprocess` | Processing mode (`crop`, `resize`, `full`) | string | `crop` |
+| `expression_scale` | Expression strength (0.0-3.0) | float | `1.0` |
+| `still` | Reduce head motion | boolean | `false` |
+| `enhancer` | Face enhancer (`gfpgan`, `RestoreFormer`) | string | `null` |
+| `background_enhancer` | Background enhancer (`realesrgan`) | string | `null` |
+
+### WebSocket Response Format
+
+```json
+{
+  "status": "success|processing|error",
+  "message": "Status description",
+  "video_base64": "base64_encoded_video_data",
+  "video_url": "/static/results/filename.mp4",
+  "request_id": "unique_request_identifier",
+  "processing_time": 15.23
 }
 ```
 
-## Acknowledgements
+### Command Line Interface
 
-Facerender code borrows heavily from [zhanglonghao's reproduction of face-vid2vid](https://github.com/zhanglonghao1992/One-Shot_Free-View_Neural_Talking_Head_Synthesis) and [PIRender](https://github.com/RenYurui/PIRender). We thank the authors for sharing their wonderful code. In training process, we also used the model from [Deep3DFaceReconstruction](https://github.com/microsoft/Deep3DFaceReconstruction) and [Wav2lip](https://github.com/Rudrabha/Wav2Lip). We thank for their wonderful work.
+### Command Line Interface
 
-We also use the following 3rd-party libraries:
+**Basic CLI usage:**
 
-- **Face Utils**: https://github.com/xinntao/facexlib
-- **Face Enhancement**: https://github.com/TencentARC/GFPGAN
-- **Image/Video Enhancement**:https://github.com/xinntao/Real-ESRGAN
-
-## Extensions:
-
-- [SadTalker-Video-Lip-Sync](https://github.com/Zz-ww/SadTalker-Video-Lip-Sync) from [@Zz-ww](https://github.com/Zz-ww): SadTalker for Video Lip Editing
-
-## Related Works
-- [StyleHEAT: One-Shot High-Resolution Editable Talking Face Generation via Pre-trained StyleGAN (ECCV 2022)](https://github.com/FeiiYin/StyleHEAT)
-- [CodeTalker: Speech-Driven 3D Facial Animation with Discrete Motion Prior (CVPR 2023)](https://github.com/Doubiiu/CodeTalker)
-- [VideoReTalking: Audio-based Lip Synchronization for Talking Head Video Editing In the Wild (SIGGRAPH Asia 2022)](https://github.com/vinthony/video-retalking)
-- [DPE: Disentanglement of Pose and Expression for General Video Portrait Editing (CVPR 2023)](https://github.com/Carlyx/DPE)
-- [3D GAN Inversion with Facial Symmetry Prior (CVPR 2023)](https://github.com/FeiiYin/SPI/)
-- [T2M-GPT: Generating Human Motion from Textual Descriptions with Discrete Representations (CVPR 2023)](https://github.com/Mael-zys/T2M-GPT)
-
-## Disclaimer
-
-This is not an official product of Tencent. 
-
-```
-1. Please carefully read and comply with the open-source license applicable to this code before using it. 
-2. Please carefully read and comply with the intellectual property declaration applicable to this code before using it.
-3. This open-source code runs completely offline and does not collect any personal information or other data. If you use this code to provide services to end-users and collect related data, please take necessary compliance measures according to applicable laws and regulations (such as publishing privacy policies, adopting necessary data security strategies, etc.). If the collected data involves personal information, user consent must be obtained (if applicable). Any legal liabilities arising from this are unrelated to Tencent.
-4. Without Tencent's written permission, you are not authorized to use the names or logos legally owned by Tencent, such as "Tencent." Otherwise, you may be liable for legal responsibilities.
-5. This open-source code does not have the ability to directly provide services to end-users. If you need to use this code for further model training or demos, as part of your product to provide services to end-users, or for similar use, please comply with applicable laws and regulations for your product or service. Any legal liabilities arising from this are unrelated to Tencent.
-6. It is prohibited to use this open-source code for activities that harm the legitimate rights and interests of others (including but not limited to fraud, deception, infringement of others' portrait rights, reputation rights, etc.), or other behaviors that violate applicable laws and regulations or go against social ethics and good customs (including providing incorrect or false information, spreading pornographic, terrorist, and violent information, etc.). Otherwise, you may be liable for legal responsibilities.
+```bash
+python inference.py --driven_audio <audio.wav> \
+                    --source_image <image.png> \
+                    --result_dir ./results
 ```
 
-LOGO: color and font suggestion: [ChatGPT](https://chat.openai.com), logo font: [Montserrat Alternates
-](https://fonts.google.com/specimen/Montserrat+Alternates?preview.text=SadTalker&preview.text_type=custom&query=mont).
+### Advanced Configuration
 
-All the copyrights of the demo images and audio are from community users or the generation from stable diffusion. Feel free to contact us if you would like use to remove them.
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `--enhancer` | Face enhancement (`gfpgan`, `RestoreFormer`) | None |
+| `--background_enhancer` | Background enhancement (`realesrgan`) | None |
+| `--still` | Reduce head motion, use original pose | False |
+| `--expression_scale` | Expression motion strength (higher = stronger) | 1.0 |
+| `--preprocess` | Input processing (`crop`, `resize`, `full`) | `crop` |
+| `--ref_eyeblink` | Reference video for natural eyeblink | None |
+| `--ref_pose` | Reference video for head pose | None |
+| `--face3dvis` | Generate 3D face visualization | False |
 
+### Preprocessing Modes
 
-<!-- Spelling fixed on Tuesday, September 12, 2023 by @fakerybakery (https://github.com/fakerybakery). These changes are licensed under the Apache 2.0 license. -->
+- **`crop`**: Generate cropped facial animation (recommended for most cases)
+- **`resize`**: Resize entire image (good for ID photo-like images)
+- **`full`**: Process cropped region and paste back to original (use with `--still`)
+
+### Examples
+
+**Basic generation:**
+```bash
+python inference.py --driven_audio examples/driven_audio/bus_chinese.wav \
+                    --source_image examples/source_image/art_0.png
+```
+
+**High quality with enhancement:**
+```bash
+python inference.py --driven_audio examples/driven_audio/bus_chinese.wav \
+                    --source_image examples/source_image/art_0.png \
+                    --enhancer gfpgan --background_enhancer realesrgan
+```
+
+**Full image mode with still pose:**
+```bash
+python inference.py --driven_audio examples/driven_audio/bus_chinese.wav \
+                    --source_image examples/source_image/full_body_2.png \
+                    --preprocess full --still
+```
+
+**Free-view 4D generation:**
+```bash
+python inference.py --driven_audio examples/driven_audio/bus_chinese.wav \
+                    --source_image examples/source_image/art_0.png \
+                    --input_yaw -20 30 10
+```
+
+### Gradio WebUI
+
+Launch the original Gradio web interface:
+```bash
+python app.py
+```
+
+## Advanced Configuration
+
+### WebSocket Server Configuration
+
+The server can be configured via environment variables:
+
+```bash
+export SADTALKER_HOST="0.0.0.0"
+export SADTALKER_PORT="8000"
+export SADTALKER_MAX_CONCURRENT="3"
+export SADTALKER_RESULTS_DIR="./results"
+export SADTALKER_STATIC_DIR="./static"
+```
+
+### Performance Tuning
+
+**GPU Memory Optimization:**
+```python
+# In fastapi_websocket_server.py
+TORCH_DEVICE = "cuda"  # or "cpu"
+MAX_CONCURRENT_REQUESTS = 3  # Adjust based on GPU memory
+```
+
+**Concurrent Processing:**
+```bash
+# Process multiple requests simultaneously
+python batch_example.py --concurrent 5 --input_dir ./batch_inputs
+```
+
+## Examples & Tutorials
+
+### Interactive Testing
+
+1. **Web Test Client:**
+   ```bash
+   # Start server and open test page
+   python fastapi_websocket_server.py
+   # Navigate to http://localhost:8000/test
+   ```
+
+2. **Python Test Client:**
+   ```bash
+   python test_client.py \
+     --image examples/source_image/art_0.png \
+     --audio examples/driven_audio/bus_chinese.wav \
+     --preprocess crop \
+     --expression_scale 1.5
+   ```
+
+3. **Batch Processing:**
+   ```bash
+   python batch_example.py \
+     --image_dir ./input_images \
+     --audio_dir ./input_audios \
+     --output_dir ./batch_results
+   ```
+
+### Integration Examples
+
+**JavaScript/Node.js:**
+```javascript
+const WebSocket = require('ws');
+const fs = require('fs');
+
+const ws = new WebSocket('ws://localhost:8000/ws');
+
+ws.on('open', function() {
+    const imageBase64 = fs.readFileSync('image.jpg', 'base64');
+    const audioBase64 = fs.readFileSync('audio.wav', 'base64');
+    
+    ws.send(JSON.stringify({
+        image_base64: imageBase64,
+        audio_base64: audioBase64,
+        preprocess: 'crop'
+    }));
+});
+
+ws.on('message', function(data) {
+    const result = JSON.parse(data);
+    if (result.status === 'success') {
+        fs.writeFileSync('output.mp4', 
+            Buffer.from(result.video_base64, 'base64'));
+    }
+});
+```
+
+**cURL Example:**
+```bash
+# Health check
+curl http://localhost:8000/health
+
+# Get API info
+curl http://localhost:8000/
+```
+
+## Monitoring & Debugging
+
+### Health Checks
+```bash
+# Server health
+curl http://localhost:8000/health
+
+# WebSocket connection test
+wscat -c ws://localhost:8000/ws
+```
+
+### Logging
+The server provides detailed logging for debugging:
+```bash
+# Start with debug logging
+python fastapi_websocket_server.py --log-level debug
+
+# View logs in Docker
+docker logs sadtalker-websocket
+```
+
+### Performance Metrics
+- Request processing time
+- Concurrent request count
+- GPU memory usage
+- Queue status
+
+## Requirements
+
+### Core Dependencies
+- Python 3.8+
+- PyTorch 1.12+
+- CUDA (recommended for GPU acceleration)
+- FFmpeg
+
+### WebSocket API Dependencies
+```bash
+pip install fastapi>=0.104.0
+pip install uvicorn[standard]>=0.24.0
+pip install websockets>=11.0.0
+```
+
+### Optional Enhancements
+```bash
+# Face enhancement
+pip install gfpgan realesrgan
+
+# 3D visualization
+pip install -r requirements3d.txt
+```
+
+## File Structure
+
+```
+SadTalker-WS-API/
+├── fastapi_websocket_server.py    # Main WebSocket server
+├── app_websocket.py              # Gradio WebSocket client
+├── test_client.html               # Interactive web test client
+├── test_client.py                # Python CLI test client
+├── simple_example.py             # Basic usage example
+├── batch_example.py              # Batch processing example
+├── test_complete_suite.py        # Complete test suite
+├── start_server.sh               # Server startup script
+├── start_gradio_client.sh        # Gradio client startup script
+├── WEBSOCKET_API.md              # Detailed API documentation
+├── docker-compose.yml            # Docker deployment
+├── Dockerfile                    # Container configuration
+├── nginx.conf                    # Reverse proxy config
+├── requirements.txt              # Python dependencies
+├── src/                          # SadTalker core modules
+├── checkpoints/                  # Pre-trained models
+├── examples/                     # Sample images and audio
+└── results/                      # Generated videos
+```
+
+## Troubleshooting
+
+### Common Issues
+
+**Test the complete setup:**
+```bash
+# Run complete test suite
+python test_complete_suite.py
+
+# Test only WebSocket API
+python test_complete_suite.py --websocket-only
+
+# Test only Gradio client
+python test_complete_suite.py --gradio-only
+
+# Quick test (skip video generation)
+python test_complete_suite.py --quick
+```
+
+**Server won't start:**
+```bash
+# Check Python environment
+which python
+python --version
+
+# Install dependencies
+pip install -r requirements.txt
+pip install fastapi uvicorn[standard] websockets
+
+# Check port availability
+lsof -i :8000
+```
+
+**GPU/CUDA issues:**
+```bash
+# Check CUDA availability
+python -c "import torch; print(torch.cuda.is_available())"
+
+# Use CPU fallback
+export TORCH_DEVICE="cpu"
+```
+
+**Memory errors:**
+```bash
+# Reduce concurrent requests
+export SADTALKER_MAX_CONCURRENT="1"
+
+# Use smaller models
+export SADTALKER_MODEL_SIZE="256"
+```
+
+**Gradio client issues:**
+```bash
+# Check if WebSocket server is running
+curl http://localhost:8000/health
+
+# Start both servers together
+bash start_gradio_client.sh -s
+
+# Check Gradio logs
+python app_websocket.py
+
+# Test Gradio accessibility
+curl http://localhost:7860
+```
+
+**WebSocket connection fails:**
+```bash
+# Test WebSocket endpoint
+wscat -c ws://localhost:8000/ws
+
+# Check firewall/proxy settings
+curl -I http://localhost:8000/health
+```
+
+### Performance Optimization
+
+1. **GPU Memory:** Reduce `MAX_CONCURRENT_REQUESTS` for limited VRAM
+2. **CPU Processing:** Set `TORCH_DEVICE="cpu"` for CPU-only inference
+3. **Batch Size:** Process multiple files concurrently with `batch_example.py`
+4. **Caching:** Enable model caching for faster subsequent requests
+
+## API Documentation
+
+For detailed API documentation, see [WEBSOCKET_API.md](WEBSOCKET_API.md).
+
+Key endpoints:
+- **WebSocket:** `ws://localhost:8000/ws` - Main inference endpoint
+- **Health:** `GET /health` - Server health check
+- **Test:** `GET /test` - Interactive test client
+- **Static:** `GET /static/*` - Generated video files
+
+## License
+
+This project is licensed under the Apache 2.0 License.
+
+## Citation
+
+If you find this work useful for your research, please cite:
+
+```bibtex
+@InProceedings{zhang2023sadtalker,
+    author    = {Zhang, Wenxuan and Cun, Xiaodong and Wang, Fei and Zhang, Yong and Shen, Ji and Yu, Guangyong and Huang, Chunbo and Cao, Feiying and Zhong, Ran and Zhao, Hao and Ding, Shuai and Lei, Jie},
+    title     = {SadTalker: Learning Realistic 3D Motion Coefficients for Stylized Audio-Driven Single Image Talking Face Animation},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    month     = {June},
+    year      = {2023},
+    pages     = {8652-8661}
+}
+```
+
+## Acknowledgments
+
+- Authors: Wenxuan Zhang, Fei Wang
+- Affiliations: Xi'an Jiaotong University, Tencent AI Lab, Ant Group
+- Conference: CVPR 2023
+
+For more details, troubleshooting, and advanced features, please refer to:
+- [WebSocket API Documentation](WEBSOCKET_API.md) - Comprehensive API guide
+- [Original SadTalker Repository](https://github.com/OpenTalker/SadTalker) - Core implementation
+- [Project Documentation](docs/) - Additional guides and tutorials
