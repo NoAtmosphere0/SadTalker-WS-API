@@ -325,7 +325,7 @@ if __name__ == "__main__":
     print(f"Static Directory: {STATIC_DIR}")
 
     uvicorn.run(
-        "fastapi_websocket_server:app",
+        "api.fastapi_server:app",
         host=args.host,
         port=args.port,
         reload=False,
