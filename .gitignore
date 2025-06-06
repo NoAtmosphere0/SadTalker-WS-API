@@ -163,10 +163,12 @@ cython_debug/
 .idea/
 
 examples/results/*
+*/gfpgan/
 gfpgan/*
 checkpoints/*
 assets/*
 results/*
+*/results/
 # Dockerfile
 start_docker.sh
 start.sh
