@@ -8,6 +8,37 @@
 
 > ⚠️ **Note:** Our model only works on REAL people or portrait images similar to real persons. Anime talking head generation will be released in the future.
 
+## Enhancements & Restructuring compared to Original SadTalker
+
+This repository extends the original SadTalker with significant enhancements for production use:
+
+### 🔄 **Directory Restructuring**
+- **Cleaner organization**: Core files separated from data and outputs
+- **Logical grouping**: API servers in `api/`, CLI tools in `cli/`, utilities in `scripts/`
+- **Data consolidation**: All models, examples, and results organized under `data/`
+
+### 🚀 **New Features**
+- **WebSocket API**: Real-time video generation via WebSocket connections
+- **Docker deployment**: One-command setup with CUDA support and auto model downloads
+- **Interactive web client**: Browser-based testing interface at `/test`
+- **Enhanced CLI**: Improved command-line tools with better error handling
+- **Concurrent processing**: Configurable limits for multiple simultaneous requests
+
+### 🛠 **Technical Improvements**
+- **Base64 I/O**: Seamless integration for web applications
+- **Health monitoring**: Service status endpoints for production deployment
+- **Auto model management**: Smart downloading and caching with error recovery
+- **Path optimization**: All file references updated for the new structure
+- **Better documentation**: Comprehensive API docs and usage examples
+
+### 📦 **Production Ready**
+- **Docker Compose**: Complete containerized deployment
+- **Environment configuration**: Flexible settings via environment variables
+- **Error handling**: Robust error management and status reporting
+- **Performance monitoring**: Built-in processing time tracking
+
+All original SadTalker functionality is preserved while adding enterprise-grade features for real-world deployment.
+
 ## Features
 
 ### WebSocket API
@@ -390,6 +421,9 @@ Download from:
 └── web/                          # Web interface files
     └── index.html                # Web test client
 ```
+
+
+
 ## Citation
 
 ```bibtex
